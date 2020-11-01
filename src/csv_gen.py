@@ -17,16 +17,16 @@ def write_as_csv(file_path: str, data: List[object], columns: List[str] = []):
             fieldnames=columns,
             extrasaction="ignore")
         writer.writeheader()
-        writer.writerows([_to_json_safe_dict(data_item) for data_item in data])
+        writer.writerows([_to_csv_safe_dict(data_item) for data_item in data])
 
 
 def read_from_csv(file_path: str, type_to_read: type, has_header=True, columns: List[str] = []):
     if not type_to_read and not columns:
         raise ValueError("dattype_to_read or columns is needed")
+
     if not columns:
         # Infer columns from type_to_read
-        item_to_read = type_to_read()
-        columns = [key for key, _ in item_to_read.__dict__.items()]
+        columns = [key for key, _ in type_to_read().__dict__.items()]
 
     rows = []
     with open(file_path, 'r', newline='') as file:
@@ -34,34 +34,33 @@ def read_from_csv(file_path: str, type_to_read: type, has_header=True, columns: 
             file,
             fieldnames=columns)
         rows = [row for row in reader]
-    
     skip_header = has_header
     data = []
+
     for row in rows:
         if skip_header:
             skip_header = False
             continue
         data.append(type_to_read(**row))
-    
+
     return data
 
 
-
-def _to_json_safe_dict(obj: object, classkey=None):
+def _to_csv_safe_dict(obj: object, classkey=None):
     if isinstance(obj, dict):
         data = {}
         for (k, v) in obj.items():
-            data[k] = _to_json_safe_dict(v, classkey)
+            data[k] = _to_csv_safe_dict(v, classkey)
         return data
     if isinstance(obj, (dt.datetime, dt.date)):
         return obj.isoformat()
     if hasattr(obj, "_ast"):
-        return _to_json_safe_dict(obj._ast())
+        return _to_csv_safe_dict(obj._ast())
     if hasattr(obj, "__iter__") and not isinstance(obj, str):
-        return [_to_json_safe_dict(v, classkey) for v in obj]
+        return [_to_csv_safe_dict(v, classkey) for v in obj]
     if hasattr(obj, "__dict__"):
         data = {
-            k: _to_json_safe_dict(v, classkey)
+            k: _to_csv_safe_dict(v, classkey)
             for k, v in obj.__dict__.items()
             if not callable(v) and not k.startswith("_")
         }
