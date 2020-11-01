@@ -5,17 +5,23 @@ Simple and type safe approach to generating CSV files with Python
 
 ### Create a type-safe model class
 Minimum requirements are
-1. Constructor must take all field values as named parameters.
-1. Value that comes as constructor argument can be either of exact type or a string. Before assigning the valueto a model field need to convert it from string if neessary.
+1. Constructor must take all fields as named arguments.
+1. Value that comes as constructor argument can be either of a desired type or a string. Before assigning an argument value to a model field it needs to be converted from string if neessary.
 
 #### Model Example
 ```py
+import datetime as dt
+from typing import Union
+
+
 class Model:
+    __test__ = False
+
     def __init__(
             self,
-            int_field: int = None,
+            int_field: Union[int, str] = None,
             string_field: str = None,
-            datetime_field: dt.datetime = None):
+            datetime_field: Union[dt.datetime, str] = None):
         self.int_field: int = _to_int_or_none(int_field)
         self.string_field: str = string_field
         self.datetime_field: dt.datetime = _to_date_time_or_none(
