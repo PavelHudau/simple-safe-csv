@@ -15,8 +15,6 @@ from typing import Union
 
 
 class Model:
-    __test__ = False
-
     def __init__(
             self,
             int_field: Union[int, str] = None,
