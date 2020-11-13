@@ -22,7 +22,7 @@ def write_as_csv(file_path: str, data: List[object], columns: List[str] = []):
 
 def read_from_csv(file_path: str, type_to_read: type, has_header=True, columns: List[str] = []):
     if not type_to_read and not columns:
-        raise ValueError("dattype_to_read or columns is needed")
+        raise ValueError("type_to_read or columns is needed")
 
     if not columns:
         # Infer columns from type_to_read
@@ -41,6 +41,7 @@ def read_from_csv(file_path: str, type_to_read: type, has_header=True, columns: 
         if skip_header:
             skip_header = False
             continue
+        # row is a dictionary. We spread dictionary key-value pairs to constructor arguments 
         data.append(type_to_read(**row))
 
     return data
