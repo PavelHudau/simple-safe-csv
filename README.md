@@ -1,12 +1,16 @@
 # simple-safe-csv
 Simple and type safe approach to generating CSV files with Python
 
+More detaiils are available in [Type-safe approach to CSV with Python
+](https://programhappy.net/2020/11/13/type-safe-approach-to-csv-with-python) blog post.
+
 ## How to use
 
 ### Create a type-safe model class
 Minimum requirements are
-1. Constructor must take all fields as named arguments.
-1. Value that comes as constructor argument can be either of a desired type or a string. Before assigning an argument value to a model field it needs to be converted from string if neessary.
+1. All field names must match CSV file header (column names).
+1. Constructor must take all fields as named arguments. Names of the arguments must match CSV file header (column names).
+1. A constructor argument value can be either of a given type (int, datetime and etc.) or a string, so before assigning constructor argument value to a model field the value may needs to be parsed from string.
 
 #### Model Example
 ```py
@@ -31,9 +35,10 @@ If there are types that need to be serialised in non-standard way, then check `_
 ### Writing to CSV
 ```py
 import src.csv_gen as csv_gen
+from typing import List
 
 
-data = [
+data: List[Model] = [
     Model(int_field=1, string_field="1", datetime_field=utc_now),
     Model(int_field=2, string_field="2", datetime_field=utc_now_plus_1)
 ]
