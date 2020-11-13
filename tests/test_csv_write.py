@@ -1,7 +1,7 @@
 import csv
 import datetime as dt
 import os
-from typing import Union
+from typing import Union, List
 
 import pytest
 import pytz
@@ -14,7 +14,7 @@ def test_file_generation_with_auto_columns(tmp_path):
     # GIVEN
     utc_now = pytz.utc.localize(dt.datetime.utcnow())
     utc_now_plus_1 = utc_now + dt.timedelta(days=1)
-    data = [
+    data: List[tm.TestModel] = [
         tm.TestModel(int_field=1, string_field="1", datetime_field=utc_now),
         tm.TestModel(int_field=2, string_field="2",
                      datetime_field=utc_now_plus_1),
@@ -49,7 +49,7 @@ def test_file_generation_with_specified_columns(tmp_path):
     # GIVEN
     utc_now = pytz.utc.localize(dt.datetime.utcnow())
     utc_now_plus_1 = utc_now + dt.timedelta(days=1)
-    data = [
+    data: List[tm.TestModel] = [
         tm.TestModel(int_field=1, string_field="1", datetime_field=utc_now),
         tm.TestModel(int_field=2, string_field="2",
                      datetime_field=utc_now_plus_1),
